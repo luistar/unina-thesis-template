@@ -14,7 +14,7 @@ A fancy LaTeX template for theses at the University of Naples "Federico II" (Uni
 --------------------------------------------|-------------------------------------------|------------------------------------------
 
 ## User guide
-Clone this repository and start writing your own content! The documentclass in thesis.tex has a few commented options you can checkout and is pretty self-explanatory. Full-compile as usual with `pdflatex thesis`, `biber thesis`, `pdflatex thesis`x2.
+Clone this repository and start writing your own content! The documentclass in thesis.tex has a few commented options you can check out and the rest of the document is pretty self-explanatory. Full-compile as usual with `pdflatex thesis`, `biber thesis`, `pdflatex thesis`x2.
 
 ## License
 This project is licensed under the GPL v3 License - see the [LICENSE](LICENSE) file for details.
