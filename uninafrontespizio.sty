@@ -1,0 +1,310 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{uninafrontespizio}[2018/07/24 UniNA Frontespizio Package]
+ 
+\RequirePackage{setspace}
+\RequirePackage{etoolbox}
+\RequirePackage{tikz}
+\usetikzlibrary{backgrounds}
+
+% Spacing commands
+
+% Flags, counters
+\def\@relatorilist{}
+\def\@correlatorilist{}
+\def\@candidatilist{}
+
+% logo positioning options
+\def\@topPosition{top}
+\def\@belowUniPosition{below-uni}
+\def\@aboveTitlePosition{above-title}
+\def\@belowTitlePosition{below-title}
+\def\@noLogo{no-logo}
+
+ 
+\DeclareOption{red}{\renewcommand{\wordcolour}{sharelatexcolour}}
+\DeclareOption*{\PackageWarning{uninafrontespizio}{Unknown option ‘\CurrentOption’}}
+\ProcessOptions\relax
+
+% Helper commands
+\newcommand{\countlist}[1]{%
+  \setcounter{listcount}{0}% Reset listcount counter
+  \renewcommand*{\do}[1]{\stepcounter{listcount}}% At each item, step listcount
+  \docsvlist{#1}% Process list
+}
+
+\newcommand{\commaorandlist}[1]{%
+    \count255=0
+    \def\do##1{\advance\count255 1 \chardef\finalitem=\count255 }%
+    \dolistloop{#1}%
+    \count255=0
+    \def\do##1{\advance\count255 1
+    \ifnum\count255=\finalitem
+        \space and\space
+    \else
+        \ifnum\count255=1
+        \else
+    ,\space
+        \fi
+    \fi##1}
+    \dolistloop{#1}
+} 
+
+\newcommand{\myprintlist}[1]{%
+    \count255=0
+    \def\do##1{\advance\count255 1 \chardef\finalitem=\count255 }%
+    \dolistloop{#1}%
+    \count255=0
+    \def\do##1{\advance\count255 1
+    \ifnum\count255=\finalitem
+        \ifnum\count255>1
+            \\
+        \fi
+    \else
+        \ifnum\count255=1
+        \else
+            \\
+        \fi
+    \fi##1}
+    \dolistloop{#1}
+}
+
+\newcommand{\printlistflushright}[1]{%
+    \count255=0
+    \def\do##1{\advance\count255 1 \chardef\finalitem=\count255 }%
+    \dolistloop{#1}%
+    \count255=0
+    \def\do##1{\advance\count255 1
+    \ifnum\count255=\finalitem
+        \ifnum\count255>1
+            \\
+        \fi
+    \else
+        \ifnum\count255=1
+        \else
+            \\
+        \fi
+    \fi\hfill##1}
+    \dolistloop{#1}
+}
+
+\newcommand{\printcandidateslist}[1]{%
+    \count255=0
+    \def\do##1{\advance\count255 1 \chardef\finalitem=\count255 }%
+    \dolistloop{#1}%
+    \count255=0
+    \def\do##1{\advance\count255 1
+    \ifnum\count255=\finalitem
+        \ifnum\count255>1
+            \\foo
+        \fi
+    \else
+        \ifnum\count255=1
+            \\foo
+        \else
+            \\foo
+        \fi
+    \fi\hfill##1}
+    \dolistloop{#1}
+    \\[-1cm]\flushright{\scshape\@Matricola}
+}
+
+\newcommand{\printlistwithsignatureline}[1]{%
+    \count255=0
+    \def\do##1{\advance\count255 1 \chardef\finalitem=\count255 }%
+    \dolistloop{#1}%
+    \count255=0
+    \def\do##1{\advance\count255 1
+    \ifnum\count255=\finalitem
+        \ifnum\count255>1
+            \\\vspace{.5cm}\hrule\par\vspace{.5cm}
+        \fi
+    \else
+        \ifnum\count255=1
+        \else
+            \\\vspace{.5cm}\hrule\par\vspace{.5cm}
+        \fi
+    \fi##1}
+    \dolistloop{#1}
+    \\\vspace{.5cm}\hrule\par\vspace{.5cm}
+}
+
+\newcommand{\printlistwithsignaturelineflushright}[1]{%
+    \count255=0
+    \def\do##1{\advance\count255 1 \chardef\finalitem=\count255 }%
+    \dolistloop{#1}%
+    \count255=0
+    \def\do##1{\advance\count255 1
+    \ifnum\count255=\finalitem
+        \ifnum\count255>1
+            \\\vspace{.5cm}\hrule\par\vspace{.5cm}
+        \fi
+    \else
+        \ifnum\count255=1
+        \else
+            \\\vspace{.5cm}\hrule\par\vspace{.5cm}
+        \fi
+    \fi\hfill##1}
+    \dolistloop{#1}
+    \\\vspace{.5cm}\hrule\par\vspace{.5cm}
+}
+
+\newcommand{\ifstrequals}[4]{
+    \def\firstOperand{#1}
+    \def\secondOperand{#2}
+    \ifx\firstOperand\secondOperand%
+        #3%
+    \else%
+        #4%
+    \fi
+}
+
+% Public commands
+
+% content
+\newcommand{\Universita}[1]{\newcommand{\@Universita}{#1}}
+\newcommand{\Facolta}[1]{\newcommand{\@Facolta}{#1}}
+\newcommand{\Dipartimento}[1]{\newcommand{\@Dipartimento}{#1}}
+\newcommand{\CorsoDiLaurea}[1]{\newcommand{\@CorsoDiLaurea}{#1}}
+\newcommand{\AnnoAccademico}[1]{\newcommand{\@AnnoAccademico}{#1}}
+\newcommand{\Logo}[1]{\newcommand{\@Logo}{#1}}
+\newcommand{\Relatore}[1]{\listadd{\@relatorilist}{#1}}
+\newcommand{\Correlatore}[1]{\listadd{\@correlatorilist}{#1}}
+\newcommand{\Candidato}[1]{\listadd{\@candidatilist}{#1}}
+
+\newcommand{\@Titolo}{}
+\newcommand{\Titolo}[1]{\renewcommand{\@Titolo}{#1}}
+
+\newcommand{\Matricola}[1]{\newcommand{\@Matricola}{#1}}
+
+%\newcommand{\@Materia}{}
+\newcommand{\Materia}[1]{\renewcommand{\@Materia}{#1}}
+
+\newcommand{\FrontespizioAlt}[1]{\newcommand{\@FrontespizioAlt}{#1}}
+
+\newcommand{\AbilitaFirme}{ \def\@Firme{} }
+\newcommand{\DisabilitaFirme}{ \undef\@Firme }
+
+\newcommand{\@LogoPosition}{top}
+\newcommand{\LogoPosition}[1]{%
+    \renewcommand{\@LogoPosition}{#1}%
+}%
+
+% labels and text
+\newcommand{\@RelatoreLabel}{Relatore}
+\newcommand{\RelatoreLabel}[1]{\renewcommand{\@RelatoreLabel}{#1}}
+
+\newcommand{\@CorrelatoreLabel}{Correlatore}
+\newcommand{\CorrelatoreLabel}[1]{\renewcommand{\@CorrelatoreLabel}{#1}}
+
+\newcommand{\@CandidatoLabel}{Candidato}
+\newcommand{\CandidatoLabel}[1]{\renewcommand{\@CandidatoLabel}{#1}}
+
+% spacing and sizes
+\newcommand{\@LogoWidth}{3cm}
+\newcommand{\LogoWidth}[1]{\renewcommand{\@LogoWidth}{#1}}
+
+\newcommand{\@relandcorrelsep}{1.5ex}
+\newcommand{\relandcorrelsep}[1]{\renewcommand{\@relandcorrelsep}{#1}}
+
+\newcommand{\@LogoBackground}{%
+    \begin{tikzpicture}[remember picture, overlay]%
+        \coordinate (realcenter) at (current page.center)+(.5cm,0cm);%
+        %\coordinate (realnorth) at (current page.north)+(.5cm,0cm);
+        %\coordinate (realsouth) at (current page.south)+(.5cm,0cm);
+        \draw node[opacity=.08] at (realcenter) {\hspace{.5cm}\includegraphics[width=1.2\linewidth]{\@Logo}};
+        %\draw[gray] (realnorth) -- (realsouth)
+        %(current page.west) -- (current page.east);
+    \end{tikzpicture}%
+}
+
+\newcommand{\makefrontespizio}{%
+    \begin{titlepage}%
+        \begin{center}
+            \setstretch{1.2}
+            \setlength{\parskip}{2ex}
+            \ifdefined\@FrontespizioAlt \else
+                \ifdefstrequal{\@LogoPosition}{\@topPosition}{\includegraphics[width=\@LogoWidth]{\@Logo}}{}
+            \fi
+
+            \ifdefined\@Universita
+                {\Large\textsc{\@Universita}}
+            \fi
+
+            \ifdefined\@FrontespizioAlt \else
+                \ifdefstrequal{\@LogoPosition}{\@belowUniPosition}{\includegraphics[width=\@LogoWidth]{\@Logo}}{}
+            \fi
+
+            \ifdefined\@Facolta
+                {\Large\textsc{\@Facolta}}
+            \fi
+
+            \ifdefined\@Dipartimento
+                {\large\textsc{\@Dipartimento}}
+            \fi
+
+            \ifdefined\@CorsoDiLaurea
+                {\large\textsc{\@CorsoDiLaurea}}
+            \fi
+
+            \ifdefined\@Materia
+                {\large\textsc{Tesi di Laurea in \@Materia}}
+            \fi
+
+            \vfill
+            \ifdefined\@FrontespizioAlt \else
+                \ifdefstrequal{\@LogoPosition}{\@aboveTitlePosition}{\includegraphics[width=\@LogoWidth]{\@Logo}}{}
+            \fi
+
+            \vfill
+            \setstretch{2}
+            {\Huge\textsc{\@Titolo}}
+            \vfill
+            \ifdefined\@FrontespizioAlt \else
+                \ifdefstrequal{\@LogoPosition}{\@belowTitlePosition}{\includegraphics[width=\@LogoWidth]{\@Logo}}{}
+            \fi
+            \vfill
+            \setstretch{1}
+            \begin{minipage}[t]{.49\textwidth}
+                \large
+
+                \textbf{\@RelatoreLabel}\par
+                \ifdefined\@Firme
+                    \printlistwithsignatureline{\@relatorilist}    
+                \else
+                    \myprintlist{\@relatorilist}
+                \fi
+                
+                \vspace{\@relandcorrelsep}
+                \textbf{\@CorrelatoreLabel}\par
+                \ifdefined\@Firme
+                    \printlistwithsignatureline{\@correlatorilist}    
+                \else
+                    \myprintlist{\@correlatorilist}
+                \fi
+            \end{minipage}\hfill%
+            \begin{minipage}[t]{.45\textwidth}
+                \large
+
+                \hfill\textbf{\@CandidatoLabel}\par
+                \ifdefined\@Firme
+                    \printlistwithsignaturelineflushright{\@candidatilist}% 
+                \else
+                    \printcandidateslist{\@candidatilist}%
+                \fi
+            \end{minipage}%
+            %\vspace{2ex}
+            \vfill
+            \ifdefined\@AnnoAccademico{\large Anno Accademico \@AnnoAccademico}\fi
+            \ifdefined\@FrontespizioAlt%
+            \@LogoBackground%
+            \fi%
+        \end{center}
+    \end{titlepage}
+}
+
+\newcommand{\makefrontespizioalt}{
+    \FrontespizioAlt{}
+    \makefrontespizio%
+    
+    \undef\@FrontespizioAlt
+}

@@ -1,0 +1,118 @@
+\documentclass[12pt, oneside, openright, 
+    %uninadraft,
+    %colorlinks, 
+    blacklinks,
+    %palatino,
+    libertine,
+    %mathpazo,
+    %tgschola,
+    %tgscholamathpazo,
+    %alegreya
+]{uninathesis}
+
+%\AtBeginDocument{\addtocontents{toc}{\protect\thispagestyle{empty}}} %remove page number from toc
+
+\usepackage[english]{babel}
+\addto\captionsenglish{% Replace "english" with the language you use
+  \renewcommand{\contentsname}%
+    {\sffamily Contents}%
+}
+
+% Math
+\RequirePackage{mathtools}
+\RequirePackage{mathrsfs} %need this for mathscr
+\let\openbox\relax
+\RequirePackage{amsthm}
+\RequirePackage{stmaryrd} %for \llbracket
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+
+% Tikz - may be removed if unneeded
+\RequirePackage{tikz}
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usetikzlibrary{positioning,automata,calc,fit,shapes,backgrounds,arrows.meta}
+\usepackage{makecell}
+
+% Miscellanea Packages
+\RequirePackage[utf8]{inputenc}
+\usepackage{ marvosym } %/Lightning
+%\usepackage{ stmaryrd } %/lightning
+%\usepackage[htt]{hyphenat}
+\usepackage{subcaption} %subfigures
+
+% read configuration file
+\input{_utils/macro.tex} %can write your macros here
+
+% Bibliography
+\RequirePackage{csquotes}
+\RequirePackage[sorting=none,maxbibnames=4]{biblatex} %dashed=false to remove dashes on repeated authors.
+\bibliography{_bib/bibliography.bib} %bib database(s)
+
+% Front page (package uninafrontespizio)
+\Universita{Università degli Studi di Napoli Federico II}
+\Facolta{Scuola Politecnica e delle Scienze di Base}
+\Dipartimento{Dipartimento di Ingegneria Elettrica e Tecnologie dell'Informazione}
+\CorsoDiLaurea{Corso di Laurea Magistrale in Informatica}
+%\Materia{Verifica di Sistemi}
+\AnnoAccademico{2017--2018}
+\Titolo{A fancy \LaTeX~template for your thesis at UniNA}
+\Relatore{Megadir. Prof. Guidobaldo Maria \textsc{Riccardelli}}
+\Relatore{Duca Conte Francesco \textsc{Barambani}}
+\Relatore{Baronessa Filiguelli \textsc{de Bonchamps}}
+\RelatoreLabel{Relatori}
+\Correlatore{Megadir. Clam. Duca Conte Pier Carlo ing. \textsc{Semenzara}}
+\Candidato{Ugo \textsc{Fantocci}}
+\Matricola{1001/bis}
+\Logo{logo-federico-II.pdf}
+\LogoWidth{3.5cm}
+\LogoPosition{below-uni}
+
+%custom hyphenation
+\hyphenation{ERTMS/ETCS}
+
+\usepackage[title,titletoc]{appendix}
+
+\begin{document}
+
+    \pagestyle{empty}
+    \frontmatter
+    \makefrontespizio~\clearpage
+    \makefrontespizioalt~\clearpage
+
+    \pagestyle{backmatter}
+    \input{_chapters/0-abstract.tex}
+    
+    \clearpage
+    \tableofcontents
+
+    \mainmatter
+
+    \input{_chapters/0-introduction.tex}
+
+    \newpage\pagestyle{main}
+
+    \input{_chapters/1-first-chapter.tex}
+
+    \input{_chapters/2-second-chapter.tex}
+
+    %other chapters here..
+
+    \input{_chapters/3-conclusions.tex}
+
+    \input{_chapters/4-appendix.tex}
+    
+    \newpage
+    \pagestyle{backmatter}
+    \printbibliography[heading=bibintoc]
+
+    %\listoffigures
+ 
+    %\listoftables
+
+\end{document}

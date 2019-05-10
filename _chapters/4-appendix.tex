@@ -1,0 +1,17 @@
+%appendix title style
+\titleformat{\chapter}[block]{\Huge\bfseries}{
+    \sffamily\huge\centering{Appendix \thechapter
+}\\}{1ex}{\sffamily\centering\huge\bfseries}
+
+\newpage\pagestyle{appendices}
+\begin{appendices}
+
+\chapter{This is an appendix}\label{appendix}
+\section{Appendix section}
+\Blindtext
+\section{Appendix section}
+\Blindtext
+
+%now another appendix
+\blinddocument
+\end{appendices}
