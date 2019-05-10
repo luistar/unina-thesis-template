@@ -11,5 +11,4 @@
 *.synctex*
 *.fls
 *latexmk
-tesi.pdf
 .vscode
